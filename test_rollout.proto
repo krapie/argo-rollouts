@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package = "github.com/argoproj/argo-rollouts/pkg/apiclient/rollout";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+package rollout;
+
+message VersionInfo {
+    string rolloutsVersion = 1;
+}
+
+service TestService {
+    rpc Version(google.protobuf.Empty) returns (VersionInfo) {
+        option (google.api.http).get = "/api/v1/version";
+    }
+}

@@ -1,0 +1,14 @@
+version: v2
+deps:
+  - buf.build/googleapis/googleapis
+modules:
+  - path: .
+    name: buf.build/argoproj/argo-rollouts
+    excludes:
+      - vendor
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT

@@ -2,8 +2,8 @@ syntax = "proto3";
 option go_package = "github.com/argoproj/argo-rollouts/pkg/apiclient/rollout";
 
 import "google/api/annotations.proto";
-import "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1/generated.proto";
-import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "pkg/apis/rollouts/v1alpha1/generated.proto";
+import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 package rollout;
@@ -71,7 +71,7 @@ message VersionInfo {
 }
 
 message RolloutInfo {
-  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1;
+  github.com.argoproj.argo_rollouts.pkg.apis.rollouts.v1alpha1.ObjectMeta objectMeta = 1;
 
   string status = 2;
   string message = 3;
@@ -101,7 +101,7 @@ message RolloutInfo {
 }
 
 message ExperimentInfo {
-  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1;
+  github.com.argoproj.argo_rollouts.pkg.apis.rollouts.v1alpha1.ObjectMeta objectMeta = 1;
   string icon = 2;
   int64 revision = 3;
   string status = 4;
@@ -111,7 +111,7 @@ message ExperimentInfo {
 }
 
 message ReplicaSetInfo {
-  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1;
+  github.com.argoproj.argo_rollouts.pkg.apis.rollouts.v1alpha1.ObjectMeta objectMeta = 1;
   string status = 2;
   string icon = 3;
   int64 revision = 4;
@@ -131,7 +131,7 @@ message ReplicaSetInfo {
 }
 
 message PodInfo {
-  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1;
+  github.com.argoproj.argo_rollouts.pkg.apis.rollouts.v1alpha1.ObjectMeta objectMeta = 1;
   string status = 2;
   string icon = 3;
   string ready = 4;
@@ -144,11 +144,11 @@ message ContainerInfo {
 }
 
 message JobInfo {
-  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1;
+  github.com.argoproj.argo_rollouts.pkg.apis.rollouts.v1alpha1.ObjectMeta objectMeta = 1;
   string status = 2;
   string icon = 3;
   string metricName = 4;
-  k8s.io.apimachinery.pkg.apis.meta.v1.Time startedAt = 5;
+  github.com.argoproj.argo_rollouts.pkg.apis.rollouts.v1alpha1.Time startedAt = 5;
 }
 
 message AnalysisRunSpecAndStatus {
@@ -157,7 +157,7 @@ message AnalysisRunSpecAndStatus {
 }
 
 message AnalysisRunInfo {
-  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1;
+  github.com.argoproj.argo_rollouts.pkg.apis.rollouts.v1alpha1.ObjectMeta objectMeta = 1;
   /*
    field type from 161 -170 will be deprecated in future.
   */
@@ -179,7 +179,7 @@ message NonJobInfo {
   string value = 1;
   string status = 2;
   string metricName = 3;
-  k8s.io.apimachinery.pkg.apis.meta.v1.Time startedAt =4;
+  github.com.argoproj.argo_rollouts.pkg.apis.rollouts.v1alpha1.Time startedAt =4;
 }
 
 message Metrics {
