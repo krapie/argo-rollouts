@@ -11,6 +11,8 @@ import {RolloutsHome} from './components/rollouts-home/rollouts-home';
 import {Shortcut, Shortcuts} from './components/shortcuts/shortcuts';
 import {ConfigProvider} from 'antd';
 import {theme} from '../config/theme';
+import {Notifications} from 'argo-ui';
+import {NotificationsContext, notificationsManager} from './shared/context/notifications';
 
 const bases = document.getElementsByTagName('base');
 const base = bases.length > 0 ? bases[0].getAttribute('href') || '/' : '/';
@@ -82,27 +84,30 @@ const App = () => {
 
     return (
         namespace && (
-            <NamespaceContext.Provider value={{namespace, availableNamespaces}}>
-                <KeybindingProvider>
-                    <Router history={history}>
-                        <Switch>
-                            <Page
-                                exact
-                                path='/:namespace?'
-                                component={<RolloutsHome />}
-                                shortcuts={[
-                                    {key: '/', description: 'Search'},
-                                    {key: 'TAB', description: 'Search, navigate search items'},
-                                    {key: ['fa-arrow-left', 'fa-arrow-right', 'fa-arrow-up', 'fa-arrow-down'], description: 'Navigate rollouts list', icon: true},
-                                    {key: ['SHIFT', 'H'], description: 'Show help menu', combo: true},
-                                ]}
-                                changeNamespace={changeNamespace}
-                            />
-                            <Page path='/rollout/:namespace?/:name' component={<Rollout />} changeNamespace={changeNamespace} />
-                        </Switch>
-                    </Router>
-                </KeybindingProvider>
-            </NamespaceContext.Provider>
+            <NotificationsContext.Provider value={{notifications: notificationsManager}}>
+                <NamespaceContext.Provider value={{namespace, availableNamespaces}}>
+                    <KeybindingProvider>
+                        <Router history={history}>
+                            <Switch>
+                                <Page
+                                    exact
+                                    path='/:namespace?'
+                                    component={<RolloutsHome />}
+                                    shortcuts={[
+                                        {key: '/', description: 'Search'},
+                                        {key: 'TAB', description: 'Search, navigate search items'},
+                                        {key: ['fa-arrow-left', 'fa-arrow-right', 'fa-arrow-up', 'fa-arrow-down'], description: 'Navigate rollouts list', icon: true},
+                                        {key: ['SHIFT', 'H'], description: 'Show help menu', combo: true},
+                                    ]}
+                                    changeNamespace={changeNamespace}
+                                />
+                                <Page path='/rollout/:namespace?/:name' component={<Rollout />} changeNamespace={changeNamespace} />
+                            </Switch>
+                        </Router>
+                    </KeybindingProvider>
+                    <Notifications notifications={notificationsManager.notifications} />
+                </NamespaceContext.Provider>
+            </NotificationsContext.Provider>
         )
     );
 };

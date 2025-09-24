@@ -7,7 +7,8 @@ import {ConfirmButton} from '../confirm-button/confirm-button';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faArrowCircleUp, faChevronCircleUp, faExclamationCircle, faRedoAlt, faSync} from '@fortawesome/free-solid-svg-icons';
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
-import {notification} from 'antd';
+import { ErrorNotification, NotificationType } from 'argo-ui';
+import { NotificationsContext } from '../../shared/context/notifications';
 
 export enum RolloutAction {
     Restart = 'Restart',
@@ -92,28 +93,16 @@ export const RolloutActionButton = (props: {action: RolloutAction; rollout: Roll
 
     const [loading, setLoading] = React.useState(false);
 
+    const {notifications} = React.useContext(NotificationsContext);
+
     const handleActionError = (error: any, actionName: string) => {
         console.error(`Error executing ${actionName}:`, error);
         
         let errorTitle = `Failed to ${actionName.toLowerCase()} rollout`;
-        let errorContent = '';
-        
-        if (error?.response?.status === 403) {
-            errorTitle = 'Permission Denied';
-            errorContent = `You don't have permission to ${actionName.toLowerCase()} this rollout. Please check your RBAC permissions.`;
-        } else if (error?.response?.data?.message) {
-            errorContent = error.response.data.message;
-        } else if (error?.message) {
-            errorContent = error.message;
-        } else {
-            errorContent = 'An unexpected error occurred. Please try again.';
-        }
 
-        notification.error({
-            message: errorTitle,
-            description: errorContent,
-            duration: 8,
-            placement: 'top',
+        notifications.show({
+            content: <ErrorNotification title={errorTitle} e={error} />,
+            type: NotificationType.Error,
         });
     };
 
