@@ -382,6 +382,22 @@ type StickinessConfig struct {
 	DurationSeconds int64 `json:"durationSeconds" protobuf:"varint,2,opt,name=durationSeconds"`
 }
 
+// NLBTrafficRouting configuration for the AWS load balancer controller to control traffic routing with NLB
+type NLBTrafficRouting struct {
+	// Service refers to the name of a `Service` (type LoadBalancer) resource in the same namespace as the `Rollout`
+	// that is reconciled by the AWS Load Balancer Controller.
+	Service string `json:"service,omitempty" protobuf:"bytes,1,opt,name=service"`
+	// Port refers to the listener port configured on the NLB.
+	Port int32 `json:"port" protobuf:"varint,2,opt,name=port"`
+	// Protocol refers to the listener protocol configured on the NLB. Defaults to TCP.
+	// +optional
+	Protocol string `json:"protocol,omitempty" protobuf:"bytes,3,opt,name=protocol"`
+	// RootService references the Service in the NLB that the controller should add the forward action to.
+	// If omitted, Service is used.
+	// +optional
+	RootService string `json:"rootService,omitempty" protobuf:"bytes,4,opt,name=rootService"`
+}
+
 // RolloutTrafficRouting hosts all the different configuration for supported service meshes to enable more fine-grained traffic routing
 type RolloutTrafficRouting struct {
 	// Istio holds Istio specific configuration to route traffic
@@ -403,6 +419,8 @@ type RolloutTrafficRouting struct {
 	ManagedRoutes []MangedRoutes `json:"managedRoutes,omitempty" protobuf:"bytes,8,rep,name=managedRoutes"`
 	// Apisix holds specific configuration to use Apisix to route traffic
 	Apisix *ApisixTrafficRouting `json:"apisix,omitempty" protobuf:"bytes,9,opt,name=apisix"`
+	// NLB holds specific configuration to use AWS load balancer controller with NLB to route traffic
+	NLB *NLBTrafficRouting `json:"nlb,omitempty" protobuf:"bytes,12,opt,name=nlb"`
 
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:pruning:PreserveUnknownFields

@@ -22,6 +22,7 @@ import (
 	"github.com/argoproj/argo-rollouts/rollout/trafficrouting/appmesh"
 	"github.com/argoproj/argo-rollouts/rollout/trafficrouting/istio"
 	"github.com/argoproj/argo-rollouts/rollout/trafficrouting/nginx"
+	"github.com/argoproj/argo-rollouts/rollout/trafficrouting/nlb"
 	"github.com/argoproj/argo-rollouts/rollout/trafficrouting/smi"
 	"github.com/argoproj/argo-rollouts/rollout/trafficrouting/traefik"
 	a6util "github.com/argoproj/argo-rollouts/utils/apisix"
@@ -72,6 +73,18 @@ func (c *Controller) NewTrafficRoutingReconciler(roCtx *rolloutContext) ([]traff
 			return trafficReconcilers, err
 		}
 		trafficReconcilers = append(trafficReconcilers, alb_reconcilier)
+	}
+	if rollout.Spec.Strategy.Canary.TrafficRouting.NLB != nil {
+		nlbReconciler, err := nlb.NewReconciler(nlb.ReconcilerConfig{
+			Rollout:  rollout,
+			Client:   c.kubeclientset,
+			Recorder: c.recorder,
+			Status:   &roCtx.newStatus,
+		})
+		if err != nil {
+			return trafficReconcilers, err
+		}
+		trafficReconcilers = append(trafficReconcilers, nlbReconciler)
 	}
 	if rollout.Spec.Strategy.Canary.TrafficRouting.SMI != nil {
 		smi_reconcilier, err := smi.NewReconciler(smi.ReconcilerConfig{
