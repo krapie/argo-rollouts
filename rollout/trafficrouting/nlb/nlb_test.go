@@ -71,7 +71,7 @@ func newRolloutForTest() *v1alpha1.Rollout {
 			CurrentPodHash:     "podhash",
 			PromoteFull:        false,
 			Canary:             v1alpha1.CanaryStatus{},
-			ObservedGeneration: 1,
+			ObservedGeneration: "1",
 		},
 	}
 }
@@ -153,6 +153,10 @@ func TestSetWeightPatchesServiceAnnotations(t *testing.T) {
 }
 
 func TestVerifyWeightMatchesTargetGroups(t *testing.T) {
+	prevVerify := defaults.VerifyTargetGroup()
+	defaults.SetVerifyTargetGroup(true)
+	defer defaults.SetVerifyTargetGroup(prevVerify)
+
 	ro := newRolloutForTest()
 	svc := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{

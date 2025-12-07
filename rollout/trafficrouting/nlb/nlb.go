@@ -304,14 +304,11 @@ func (r *Reconciler) RemoveManagedRoutes() error {
 		actionKey:             nil,
 		managedAnnotationsKey: desiredAnnotations[managedAnnotationsKey],
 	}
-	patchBytes, err := jsonutil.Marshal(map[string]any{
+	patchBytes := jsonutil.MustMarshal(map[string]any{
 		"metadata": map[string]any{
 			"annotations": patchAnnotations,
 		},
 	})
-	if err != nil {
-		return err
-	}
 	_, err = r.cfg.Client.CoreV1().Services(r.cfg.Rollout.Namespace).Patch(context.TODO(), nlbCfg.Service, types.MergePatchType, patchBytes, metav1.PatchOptions{})
 	return err
 }
@@ -370,7 +367,7 @@ func buildServiceAnnotationPatch(annotations map[string]string) ([]byte, error) 
 			"annotations": annotations,
 		},
 	}
-	return jsonutil.Marshal(patch)
+	return jsonutil.MustMarshal(patch), nil
 }
 
 // nlbAction defines the forward action for NLB listener

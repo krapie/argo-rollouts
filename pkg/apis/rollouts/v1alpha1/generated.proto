@@ -1135,6 +1135,25 @@ message MetricResult {
   optional int32 consecutiveSuccess = 13;
 }
 
+// NLBTrafficRouting configuration for the AWS load balancer controller to control traffic routing with NLB
+message NLBTrafficRouting {
+  // Service refers to the name of a `Service` (type LoadBalancer) resource in the same namespace as the `Rollout`
+  // that is reconciled by the AWS Load Balancer Controller.
+  optional string service = 1;
+
+  // Port refers to the listener port configured on the NLB.
+  optional int32 port = 2;
+
+  // Protocol refers to the listener protocol configured on the NLB. Defaults to TCP.
+  // +optional
+  optional string protocol = 3;
+
+  // RootService references the Service in the NLB that the controller should add the forward action to.
+  // If omitted, Service is used.
+  // +optional
+  optional string rootService = 4;
+}
+
 // NewRelicMetric defines the newrelic query to perform canary analysis
 message NewRelicMetric {
   // Profile is the name of the secret holding NR account configuration
@@ -1683,6 +1702,9 @@ message RolloutTrafficRouting {
 
   // Apisix holds specific configuration to use Apisix to route traffic
   optional ApisixTrafficRouting apisix = 9;
+
+  // NLB holds specific configuration to use AWS load balancer controller with NLB to route traffic
+  optional NLBTrafficRouting nlb = 12;
 
   // +kubebuilder:validation:Schemaless
   // +kubebuilder:pruning:PreserveUnknownFields
